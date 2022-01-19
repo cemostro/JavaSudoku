@@ -2,9 +2,8 @@ package sudoku.computationlogic;
 
 import sudoku.problemdomain.Coordinates;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static sudoku.problemdomain.SudokuGame.GRID_BOUNDARY;
 
@@ -45,52 +44,36 @@ public class GameGenerator {
     }
 
     private static int[][] getSolvedGame() {
-        Random random = new Random(System.currentTimeMillis());
-        int[][] newGrid = new int[GRID_BOUNDARY][GRID_BOUNDARY];
-
-        for (int value = 1; value <= GRID_BOUNDARY; value++) {
-            int allocations = 0;
-            int interrupt = 0;
-
-            List<Coordinates> allocTracker = new ArrayList<>();
-            int attempts = 0;
-
-            while(allocations < GRID_BOUNDARY) {
-                //If too many numbers, reset past tested numbers
-                if (interrupt > 200) {
-                    allocTracker.forEach(coord -> {
-                        newGrid[coord.getX()][coord.getY()] = 0;
-                    });
-
-                    interrupt = 0;
-                    allocations = 0;
-                    allocTracker.clear();
-                    attempts++;
-
-                    if (attempts > 500) {
-                        clearArray(newGrid);
-                        attempts = 0;
-                        value = 0;
-                    }
-                }
-
-                int xCoordinate = random.nextInt(GRID_BOUNDARY);
-                int yCoordinate = random.nextInt(GRID_BOUNDARY);
-
-                if (newGrid[xCoordinate][yCoordinate] == 0) {
-                    newGrid[xCoordinate][yCoordinate] = value;
-
-                    if (GameLogic.sudokuIsInvalid(newGrid)) {
-                        newGrid[xCoordinate][yCoordinate] = 0;
-                        interrupt++;
-                    } else {
-                        allocTracker.add(new Coordinates(xCoordinate, yCoordinate));
-                        allocations++;
-                    }
-                }
-            }
+        List<Integer> values = new ArrayList<>();
+        for (int i = 1; i <= GRID_BOUNDARY; i++) {
+            values.add(i);
         }
-        return newGrid;
+        int[][] solvedBoard = new int[GRID_BOUNDARY][GRID_BOUNDARY];
+        boolean testRest = getSolvedGameHelper(0, 0, solvedBoard, values);
+        System.out.println(testRest);
+        return solvedBoard;
+    }
+
+    private static boolean getSolvedGameHelper(int xIndex, int yIndex, int[][] board, List<Integer> randomValues) {
+        if (yIndex == GRID_BOUNDARY)
+            return true;
+        Collections.shuffle(randomValues);
+        for (int i = 0; i < GRID_BOUNDARY; i++) {
+            board[xIndex][yIndex] = randomValues.get(i);
+            if (GameLogic.sudokuIsInvalid(board)) {
+                continue;
+            }
+            boolean isSolved;
+            if (xIndex == GRID_BOUNDARY - 1) {
+                isSolved = getSolvedGameHelper(0, yIndex+1, board, randomValues);
+            } else {
+                isSolved = getSolvedGameHelper(xIndex + 1, yIndex, board, randomValues);
+            }
+            if (isSolved)
+                return true;
+        }
+        board[xIndex][yIndex] = 0;
+        return false;
     }
 
     private static void clearArray(int[][] newGrid) {
