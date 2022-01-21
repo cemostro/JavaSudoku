@@ -56,8 +56,10 @@ public class GameGenerator {
         if (yIndex == GRID_BOUNDARY)
             return true;
         Collections.shuffle(randomValues);
+        //Copy random numbers to local array so that they don't get reshuffled in next recursion level.
+        Integer[] currentRandomValues = randomValues.toArray(new Integer[0]);
         for (int i = 0; i < GRID_BOUNDARY; i++) {
-            board[xIndex][yIndex] = randomValues.get(i);
+            board[xIndex][yIndex] = currentRandomValues[i];
             if (GameLogic.sudokuIsInvalid(board)) {
                 continue;
             }
