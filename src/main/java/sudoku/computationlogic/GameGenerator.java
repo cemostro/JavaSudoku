@@ -3,7 +3,6 @@ package sudoku.computationlogic;
 import sudoku.problemdomain.Coordinates;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 import static sudoku.problemdomain.SudokuGame.GRID_BOUNDARY;
 
@@ -49,8 +48,7 @@ public class GameGenerator {
             values.add(i);
         }
         int[][] solvedBoard = new int[GRID_BOUNDARY][GRID_BOUNDARY];
-        boolean testRest = getSolvedGameHelper(0, 0, solvedBoard, values);
-        System.out.println(testRest);
+        getSolvedGameHelper(0, 0, solvedBoard, values);
         return solvedBoard;
     }
 

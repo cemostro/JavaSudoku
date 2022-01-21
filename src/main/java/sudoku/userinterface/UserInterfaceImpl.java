@@ -64,7 +64,8 @@ public class UserInterfaceImpl implements IUserInterfaceContract.View, EventHand
 
     private void drawGridLines(Group root) {
         //TODO Fix 4*4 grid - Limit to 1-4
-        int xAndY = 114;
+        double lineOffset = BOARD_X_AND_Y / GRID_BOUNDARY;
+        double xAndY = 50 + lineOffset;
         int index = 0;
         int squareSize = (int) Math.sqrt(GRID_BOUNDARY);
         while (index < GRID_BOUNDARY - 1) {
@@ -72,9 +73,8 @@ public class UserInterfaceImpl implements IUserInterfaceContract.View, EventHand
             if ((index + 1) % squareSize == 0) {
                 thickness = 3;
             }
-
-            Rectangle verticalLine = getLine(xAndY + 64 * index, BOARD_PADDING, BOARD_X_AND_Y, thickness);
-            Rectangle horizontalLine = getLine(BOARD_PADDING, xAndY + 64 * index, thickness, BOARD_X_AND_Y);
+            Rectangle verticalLine = getLine(xAndY + lineOffset * index, BOARD_PADDING, BOARD_X_AND_Y, thickness);
+            Rectangle horizontalLine = getLine(BOARD_PADDING, xAndY + lineOffset * index, thickness, BOARD_X_AND_Y);
 
             //Add the UI elements to the group
             root.getChildren().addAll(verticalLine, horizontalLine);
@@ -96,7 +96,7 @@ public class UserInterfaceImpl implements IUserInterfaceContract.View, EventHand
         final int xOrigin = 50;
         final int yOrigin = 50;
 
-        final int xAndYDelta = 64;
+        final int xAndYDelta = (int) (BOARD_X_AND_Y / GRID_BOUNDARY);
 
         //O(n^2) Runtime Complexity
         for (int xIndex = 0; xIndex < GRID_BOUNDARY; xIndex++) {
@@ -127,8 +127,8 @@ public class UserInterfaceImpl implements IUserInterfaceContract.View, EventHand
         tile.setLayoutX(x);
         tile.setLayoutY(y);
         //Text fields are 64*64
-        tile.setPrefHeight(64);
-        tile.setPrefWidth(64);
+        tile.setPrefHeight(BOARD_X_AND_Y / GRID_BOUNDARY);
+        tile.setPrefWidth(BOARD_X_AND_Y / GRID_BOUNDARY);
 
         //Transparent background, will be supplied by sudokuBoard
         tile.setBackground(Background.EMPTY);
@@ -161,12 +161,7 @@ public class UserInterfaceImpl implements IUserInterfaceContract.View, EventHand
         Font buttonFont = new Font(15);
         button.setFont(buttonFont);
         button.setStyle("-fx-background-color: lightgreen");
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                showDialog("Hello from button!");
-            }
-        });
+        button.setOnAction(actionEvent -> showDialog("Hello from button!"));
         root.getChildren().add(button);
 
     }
