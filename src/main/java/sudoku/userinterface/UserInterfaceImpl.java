@@ -1,6 +1,5 @@
 package sudoku.userinterface;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -26,14 +25,12 @@ import static sudoku.problemdomain.SudokuGame.GRID_BOUNDARY;
 import java.util.HashMap;
 
 public class UserInterfaceImpl implements IUserInterfaceContract.View, EventHandler<KeyEvent> {
-    //Event handler is How we listen for input from the keyboard
 
     //Background window for the application
     private final Stage stage;
     private final Group root;
 
-    //How do we keep track of 81 different text fields?
-    private HashMap<Coordinates, SudokuTextField> textFieldCoordinates;
+    private final HashMap<Coordinates, SudokuTextField> textFieldCoordinates;
 
     private IUserInterfaceContract.EventListener listener;
 
@@ -99,7 +96,6 @@ public class UserInterfaceImpl implements IUserInterfaceContract.View, EventHand
 
         final int xAndYDelta = (int) (BOARD_X_AND_Y / GRID_BOUNDARY);
 
-        //O(n^2) Runtime Complexity
         for (int xIndex = 0; xIndex < GRID_BOUNDARY; xIndex++) {
             for (int yIndex = 0; yIndex < GRID_BOUNDARY; yIndex++) {
                 int x = xOrigin + xIndex * xAndYDelta;
@@ -127,7 +123,7 @@ public class UserInterfaceImpl implements IUserInterfaceContract.View, EventHand
 
         tile.setLayoutX(x);
         tile.setLayoutY(y);
-        //Text fields are 64*64
+
         tile.setPrefHeight(BOARD_X_AND_Y / GRID_BOUNDARY);
         tile.setPrefWidth(BOARD_X_AND_Y / GRID_BOUNDARY);
 
@@ -258,7 +254,6 @@ public class UserInterfaceImpl implements IUserInterfaceContract.View, EventHand
                 ((TextField) event.getSource()).setText("");
             }
         }
-        //Finish the event
         event.consume();
     }
 
