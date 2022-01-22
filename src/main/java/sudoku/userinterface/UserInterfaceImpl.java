@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import sudoku.computationlogic.GameGenerator;
 import sudoku.constants.GameState;
 import sudoku.problemdomain.Coordinates;
 import sudoku.problemdomain.SudokuGame;
@@ -161,7 +162,10 @@ public class UserInterfaceImpl implements IUserInterfaceContract.View, EventHand
         Font buttonFont = new Font(15);
         button.setFont(buttonFont);
         button.setStyle("-fx-background-color: lightgreen");
-        button.setOnAction(actionEvent -> showDialog("Hello from button!"));
+        button.setOnAction(actionEvent -> {
+            this.updateBoard(new SudokuGame(GameState.COMPLETE, GameGenerator.getSolution()));
+            showDialog("Do you want to play again?");
+        });
         root.getChildren().add(button);
 
     }
@@ -237,7 +241,12 @@ public class UserInterfaceImpl implements IUserInterfaceContract.View, EventHand
     public void handle(KeyEvent event) {
         //When the user inputs a text box, that event will pop up here
         if(event.getEventType() == KeyEvent.KEY_PRESSED) {
-            if (event.getText().matches("[0-9]")) {
+            String valueRegex = "";
+            if (GRID_BOUNDARY == 4)
+                valueRegex = "[0-4]";
+            else if (GRID_BOUNDARY == 9)
+                valueRegex = "[0-9]";
+            if (event.getText().matches(valueRegex)) {
                 int value = Integer.parseInt(event.getText());
                 //Source is the ui element, clicked object
                 handleInput(value, event.getSource());

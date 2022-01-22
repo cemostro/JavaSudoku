@@ -1,15 +1,22 @@
 package sudoku.computationlogic;
 
-import sudoku.problemdomain.Coordinates;
-
 import java.util.*;
 
 import static sudoku.problemdomain.SudokuGame.GRID_BOUNDARY;
 
 public class GameGenerator {
 
+    private static int[][] unsolvedGrid;
+    private static int[][] solvedGrid;
+
     public static int[][] getNewGameGrid() {
-        return unsolveGame(getSolvedGame());
+        solvedGrid = getSolvedGame();
+        unsolvedGrid = unsolveGame(solvedGrid);
+        return unsolvedGrid;
+    }
+
+    public static int[][] getSolution() {
+        return solvedGrid;
     }
 
     private static int[][] unsolveGame(int[][] solvedGame) {
@@ -23,7 +30,7 @@ public class GameGenerator {
 
             int index = 0;
 
-            //Remove 40 values
+            //Remove Half of the values
             int totalSize = GRID_BOUNDARY * GRID_BOUNDARY;
             while (index < (totalSize/2)) {
                 int xCoordinate = random.nextInt(GRID_BOUNDARY);
@@ -76,11 +83,4 @@ public class GameGenerator {
         return false;
     }
 
-    private static void clearArray(int[][] newGrid) {
-        for (int xIndex = 0; xIndex < GRID_BOUNDARY; xIndex++) {
-            for (int yIndex = 0; yIndex < GRID_BOUNDARY; yIndex++) {
-                newGrid[xIndex][yIndex] = 0;
-            }
-        }
-    }
 }
